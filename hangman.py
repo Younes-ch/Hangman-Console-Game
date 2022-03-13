@@ -3,6 +3,7 @@
 import random
 import subprocess
 import os
+import sys
 from colorama import Fore
 import time
 
@@ -26,7 +27,7 @@ def show_alphabet(alphabet_matrix, character_to_remove = None, character_is_corr
 
 
 # l'algorithme principale de jeu:
-def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tries):
+def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
    chosen_word_copy = "_".join(chosen_word) # le mot a diviner sous forme de la masque
    lives_available = Fore.RED + "❤️ "*number_of_tries # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
@@ -41,10 +42,15 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
       while len(answer) != 1 or not answer.isalpha():
          answer = input("Enter a character:\n") # control de saisie de caractère a choisir.
       if answer.lower() in chosen_word: # si l'utilisateur donne une bonne réponse.
-         empty_chosen_word = list(empty_chosen_word)
-         for i in range(len(chosen_word_copy)):
-            if chosen_word_copy[i] == answer:
-               empty_chosen_word[i] = chosen_word_copy[i] # permutation de "_" dans le masque avec la lettre correcte.
+         if answer.lower() not in already_chosen_characters:
+            already_chosen_characters[answer.lower()] = "✅"
+            empty_chosen_word = list(empty_chosen_word)
+            for i in range(len(chosen_word_copy)):
+               if chosen_word_copy[i] == answer.lower():
+                  empty_chosen_word[i] = chosen_word_copy[i] # permutation de "_" dans le masque avec la lettre correcte.
+         else:
+            print("Character already entered and was " + Fore.GREEN + "CORRECT!")
+            time.sleep(1.5)
          clear()
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
          print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {}\n".format(number_of_tries, lives_available.strip()))
@@ -53,25 +59,50 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
          print()
          show_alphabet(alphabet_matrix, character_is_correct = answer)
       else: # si le joueur donne une mauvaise reponse.
+         if answer.lower() not in already_chosen_characters:
+            number_of_tries -= 1 # decrementation de nombre de vies de joueur s'il a choisit un caractère faux pour la première fois.
+            already_chosen_characters[answer.lower()] = "❌"
+         else:
+            print("Character already entered and was " + Fore.RED + "WRONG!")
+            time.sleep(1.5)
          clear()
-         number_of_tries -= 1 # decrementation de nombre de vie de joueur.
          lives_available = Fore.RED + "❤️ "*number_of_tries
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
          print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {}\n".format(number_of_tries, lives_available.strip()))
          print(Fore.WHITE + "".join(empty_chosen_word))
          print()
          show_alphabet(alphabet_matrix, character_to_remove = answer)
-      
+   
+   global won # on veut acceder a la variable "won" et "wrong_guesses" pour mise a jour sa valeur.
+   global wrong_guesses
+
    if number_of_tries == 0: # si le joueur est mort (0 vies).
       clear()
       print(Fore.RED+"="*40)
-      print(Fore.RED+"||{:^35}||".format("Game Over 🙄")) # affichage le message de la perte.
+      print(Fore.RED+"||{:^35}||".format("Wrong Guess 🙄")) # affichage le message de la perte.
       print(Fore.RED+"="*40)
+      wrong_guesses += 1
+      won = False
    else: # si le joueur a gagné
       clear()
       print(Fore.GREEN+"="*40)
       print(Fore.GREEN+"||{:^35}||".format("Congrats! You figured it out! ✅")) # affichage le message de victoire.
       print(Fore.GREEN+"="*40)
+      won = True
+
+
+# Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
+def end_game(won, wrong_guesses):
+   clear()
+   if won and wrong_guesses == 0: # Controle si l'utilisateur a complete tous les niveaux avec success ou non.
+      print(Fore.CYAN+"="*40)
+      print(Fore.CYAN+"||{:^35}||".format("You won all Levels! You wizard 🧙")) # affichage le message de victoire.
+      print(Fore.CYAN+"="*40)
+   else:
+      print(Fore.CYAN+"="*44)
+      print(Fore.CYAN+"||{:^41}||".format("Nice work! you guessed {} words out of 14".format(wrong_guesses))) # affichage le message de victoire.
+      print(Fore.CYAN+"="*44)
+   sys.exit(0)
 
 # Fonction pour effacer le contenu précédent du console:
 def clear():
@@ -95,9 +126,9 @@ possible_words_list = [
                       "ramadan",
                       "heaven",
                       "spongebob",
-                      "everest",
-                      "paris",
                       "kaiessaied",
+                      "paris",
+                      "everest",
                       "tokyo",
                       "asia"
                      ]
@@ -119,6 +150,8 @@ possible_words_dict = {
                        "asia" : "Largest continent on earth 🌏."
                     }
                     
+already_chosen_words = []
+wrong_guesses = 0
 
 # ************************************************************************************************************
 
@@ -126,9 +159,16 @@ possible_words_dict = {
 # ************************************** Programme Principale ***************************************************
 
 while True:
+   already_chosen_characters = {}
    clear()
-   # choisir une mot aléatoire de la liste
-   chosen_word = random.choice(possible_words_list)
+   # choisir une mot aléatoire de la liste et guarantir que le mot a deviner va etre choisit une seule fois.
+   while True:
+      chosen_word = random.choice(possible_words_list)
+      if chosen_word in already_chosen_words:
+         chosen_word = random.choice(possible_words_list)
+      else:
+         already_chosen_words.append(chosen_word)
+         break
 
    # initialisation de la matrice principal avec les alphabets
    alphabet_matrix = [
@@ -146,13 +186,16 @@ while True:
       empty_chosen_word += " _"
    empty_chosen_word = empty_chosen_word.strip() # initialisation de masque.
 
-   main_game(possible_words_dict, chosen_word, empty_chosen_word, 7)
+   main_game(possible_words_dict, chosen_word, empty_chosen_word, 7, already_chosen_characters)
    time.sleep(2.3) # permet d'attendre 2.3 sec aprés passer a l'instruction suivante.
    clear()
-   play_again = input(Fore.BLUE+"► Play Again? (Y / N) ◄:\n")      # choix de jouer une autre fois.
-   while play_again.lower() != "y" and play_again.lower() != "n": # control de saisie de play_again
-      play_again = input(Fore.BLUE+"► Play Again? (Y / N) ◄:\n")
-   if play_again.lower() == "n": # si la reponse est non le program va se fermer sinon il va s'executer à nouveau.
-      break                      
+   if len(already_chosen_words) == len(possible_words_list): # Si l'utilisateur a trouve tout les mots alors on quitte.
+      end_game(won, wrong_guesses)
+   else:
+      play_again = input(Fore.BLUE+"► Play Again? (Y / N) ◄:\n")      # choix de jouer une autre fois.
+      while play_again.lower() != "y" and play_again.lower() != "n": # control de saisie de play_again
+         play_again = input(Fore.BLUE+"► Play Again? (Y / N) ◄:\n")
+      if play_again.lower() == "n": # si la reponse est non le program va se fermer sinon il va s'executer à nouveau.
+         break                      
 
 # ************************************************************************************************************
