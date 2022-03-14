@@ -192,9 +192,9 @@ while True:
    if len(already_chosen_words) == len(possible_words_list): # Si l'utilisateur a trouve tout les mots alors on quitte.
       end_game(won, wrong_guesses)
    else:
-      play_again = input(Fore.BLUE+"► Play Again? (Y / N) ◄:\n")      # choix de jouer une autre fois.
+      play_again = input(Fore.BLUE+"► Next Level? (Y / N) ◄:\n")      # choix de jouer une autre fois.
       while play_again.lower() != "y" and play_again.lower() != "n": # control de saisie de play_again
-         play_again = input(Fore.BLUE+"► Play Again? (Y / N) ◄:\n")
+         play_again = input(Fore.BLUE+"► Next Level? (Y / N) ◄:\n")
       if play_again.lower() == "n": # si la reponse est non le program va se fermer sinon il va s'executer à nouveau.
          break                      
 
