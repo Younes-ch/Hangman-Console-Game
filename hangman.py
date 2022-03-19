@@ -28,10 +28,12 @@ def show_alphabet(alphabet_matrix, character_to_remove = None, character_is_corr
 
 # l'algorithme principale de jeu:
 def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
+   global level
+   level = Fore.BLUE + "Level: " + str(level) + "/14"
    chosen_word_copy = "_".join(chosen_word) # le mot a diviner sous forme de la masque
    lives_available = Fore.RED + "❤️ "*number_of_tries # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
-   print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {}\n".format(number_of_tries, lives_available.strip()))
+   print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available.strip(), level))
    print(Fore.WHITE)
    print(empty_chosen_word)
    print()
@@ -53,7 +55,7 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
             time.sleep(1.5)
          clear()
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {}\n".format(number_of_tries, lives_available.strip()))
+         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available.strip(), level))
          print(Fore.WHITE)
          print("".join(empty_chosen_word))
          print()
@@ -68,7 +70,7 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
          clear()
          lives_available = Fore.RED + "❤️ "*number_of_tries
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {}\n".format(number_of_tries, lives_available.strip()))
+         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available.strip(), level))
          print(Fore.WHITE + "".join(empty_chosen_word))
          print()
          show_alphabet(alphabet_matrix, character_to_remove = answer)
@@ -83,13 +85,14 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
       print(Fore.RED+"="*40)
       wrong_guesses += 1
       won = False
+      level = int("".join(level[11:level.index("/")]))
    else: # si le joueur a gagné
       clear()
       print(Fore.GREEN+"="*40)
       print(Fore.GREEN+"||{:^35}||".format("Congrats! You figured it out! ✅")) # affichage le message de victoire.
       print(Fore.GREEN+"="*40)
       won = True
-
+      level = int("".join(level[11:level.index("/")])) + 1
 
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
 def end_game(won, wrong_guesses):
@@ -100,7 +103,7 @@ def end_game(won, wrong_guesses):
       print(Fore.CYAN+"="*40)
    else:
       print(Fore.CYAN+"="*44)
-      print(Fore.CYAN+"||{:^41}||".format("Nice work! you guessed {} words out of 14".format(wrong_guesses))) # affichage le message de victoire.
+      print(Fore.CYAN+"||{:^41}||".format("Hard Luck! you guessed {} words out of 14".format(14 - wrong_guesses))) # affichage le message de victoire.
       print(Fore.CYAN+"="*44)
    sys.exit(0)
 
@@ -149,9 +152,9 @@ possible_words_dict = {
                        "tokyo" : "Most populated city in the world 🏙️.",
                        "asia" : "Largest continent on earth 🌏."
                     }
-                    
 already_chosen_words = []
 wrong_guesses = 0
+level = 1         
 
 # ************************************************************************************************************
 
