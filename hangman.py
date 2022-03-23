@@ -33,11 +33,11 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
    chosen_word_copy = "_".join(chosen_word) # le mot a diviner sous forme de la masque
    lives_available = Fore.RED + "❤️ "*number_of_tries # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
-   print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available.strip(), level))
+   print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, level))
    print(Fore.WHITE)
    print(empty_chosen_word)
    print()
-   # affichage de la matrice avec avoir compte des lettres choisit 
+   # affichage de la matrice avec avoir compte des lettres choisit
    show_alphabet(alphabet_matrix)
    while number_of_tries > 0 and chosen_word != "".join("".join(empty_chosen_word).split()):
       answer = input("Enter a character:\n")
@@ -55,7 +55,7 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
             time.sleep(1.5)
          clear()
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available.strip(), level))
+         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, level))
          print(Fore.WHITE)
          print("".join(empty_chosen_word))
          print()
@@ -70,11 +70,11 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
          clear()
          lives_available = Fore.RED + "❤️ "*number_of_tries
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available.strip(), level))
+         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, level))
          print(Fore.WHITE + "".join(empty_chosen_word))
          print()
          show_alphabet(alphabet_matrix, character_to_remove = answer)
-   
+
    global won # on veut acceder a la variable "won" et "wrong_guesses" pour mise a jour sa valeur.
    global wrong_guesses
 
@@ -85,14 +85,14 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
       print(Fore.RED+"="*40)
       wrong_guesses += 1
       won = False
-      level = int("".join(level[11:level.index("/")]))
+      level = int(level[11:level.index("/")])
    else: # si le joueur a gagné
       clear()
       print(Fore.GREEN+"="*40)
       print(Fore.GREEN+"||{:^35}||".format("Congrats! You figured it out! ✅")) # affichage le message de victoire.
       print(Fore.GREEN+"="*40)
       won = True
-      level = int("".join(level[11:level.index("/")])) + 1
+      level = int(level[11:level.index("/")]) + 1
 
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
 def end_game(won, wrong_guesses):
@@ -154,7 +154,7 @@ possible_words_dict = {
                     }
 already_chosen_words = []
 wrong_guesses = 0
-level = 1         
+level = 1
 
 # ************************************************************************************************************
 
@@ -199,6 +199,6 @@ while True:
       while play_again.lower() != "y" and play_again.lower() != "n": # control de saisie de play_again
          play_again = input(Fore.BLUE+"► Next Level? (Y / N) ◄:\n")
       if play_again.lower() == "n": # si la reponse est non le program va se fermer sinon il va s'executer à nouveau.
-         break                      
+         break
 
 # ************************************************************************************************************
