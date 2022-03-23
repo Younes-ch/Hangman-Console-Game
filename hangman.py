@@ -29,7 +29,7 @@ def show_alphabet(alphabet_matrix, character_to_remove = None, character_is_corr
 # l'algorithme principale de jeu:
 def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
    global level
-   level = Fore.BLUE + "Level: " + str(level) + "/14"
+   level = Fore.BLUE + "Level: " + str(level) + "/" + str(len(possible_words_list))
    chosen_word_copy = "_".join(chosen_word) # le mot a diviner sous forme de la masque
    lives_available = Fore.RED + "❤️ "*number_of_tries # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
@@ -103,7 +103,7 @@ def end_game(won, wrong_guesses):
       print(Fore.CYAN+"="*40)
    else:
       print(Fore.CYAN+"="*44)
-      print(Fore.CYAN+"||{:^41}||".format("Hard Luck! you guessed {} words out of 14".format(14 - wrong_guesses))) # affichage le message de victoire.
+      print(Fore.CYAN+"||{:^41}||".format(f"Hard Luck! you guessed {len(possible_words_list) - wrong_guesses} words out of {len(possible_words_list)}")) # affichage le message de victoire.
       print(Fore.CYAN+"="*44)
    sys.exit(0)
 
