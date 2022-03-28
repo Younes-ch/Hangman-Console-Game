@@ -114,7 +114,18 @@ def clear():
    else:
       subprocess.run(["clear"])
 
-
+def typewriter(): # Pour afficher un message introductive animée du jeu.
+    clear()
+    welcome_message = Fore.GREEN + "Hello! Welcome to the console version of the famous Hangman game!\n" + \
+    Fore.BLUE + "This game was made by " + Fore.CYAN +"TAKTEKA " + Fore.BLUE +"Team,\n" + Fore.YELLOW + "We hope you like it!"
+    for c in welcome_message:
+        sys.stdout.write(c)
+        sys.stdout.flush()
+        if c != '\n':
+            time.sleep(0.1)
+        else:
+            time.sleep(1)
+    time.sleep(1)
 # ************************************************************************************************************
 
 # ******************************** Initialisation de nos variables globales **********************************
@@ -162,6 +173,7 @@ level = 1
 # ************************************** Programme Principale ***************************************************
 
 while True:
+   typewriter()
    already_chosen_characters = {}
    clear()
    # choisir une mot aléatoire de la liste et guarantir que le mot a deviner va etre choisit une seule fois.
