@@ -117,7 +117,7 @@ def clear():
 def typewriter(): # Pour afficher un message introductive animée du jeu.
     clear()
     welcome_message = Fore.GREEN + "Hello! Welcome to the console version of the famous Hangman game!\n" + \
-    Fore.BLUE + "This game was made by " + Fore.CYAN +"TAKTEKA " + Fore.BLUE +"Team,\n" + Fore.YELLOW + "We hope you like it!"
+    Fore.BLUE + "This game was made by " + Fore.CYAN +"HAYAS " + Fore.BLUE +"Team,\n" + Fore.YELLOW + "We hope you like it!"
     for c in welcome_message:
         sys.stdout.write(c)
         sys.stdout.flush()
