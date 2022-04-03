@@ -5,6 +5,7 @@ import subprocess
 import os
 import sys
 from colorama import Fore
+from termcolor import colored, cprint
 import time
 
 
@@ -114,18 +115,47 @@ def clear():
    else:
       subprocess.run(["clear"])
 
-def typewriter(): # Pour afficher un message introductive animée du jeu.
+def main_menu(): # Pour afficher un message introductive animée du jeu.
     clear()
-    welcome_message = Fore.GREEN + "Hello! Welcome to the console version of the famous Hangman game!\n" + \
-    Fore.BLUE + "This game was made by " + Fore.CYAN +"HAYAS " + Fore.BLUE +"Team,\n" + Fore.YELLOW + "We hope you like it!"
+    terminal_width = os.get_terminal_size().columns
+    cprint('='*terminal_width, 'magenta')
+    cprint('{:^{terminal_width}}'.format('Equipe HAYAS: Hangman Game!', terminal_width=terminal_width), 'magenta', attrs=['blink', 'bold'])
+    cprint('='*terminal_width, 'magenta')
+    welcome_message = colored("{:>82}".format("Hello! Welcome to the console version of the famous Hangman game!\n"), 'green') + \
+    colored("{:>50}".format("This game was made by "), 'blue') + colored("HAYAS ", 'cyan', attrs=['bold']) + \
+    colored("Team,\n", 'blue') + \
+    colored("{:>55}".format("We hope you like it!\n\n"), 'yellow')
     for c in welcome_message:
         sys.stdout.write(c)
         sys.stdout.flush()
-        if c != '\n':
+        if c == ' ':
+            time.sleep(0.01)
+        elif c != '\n':
             time.sleep(0.1)
         else:
             time.sleep(1)
+    choices = colored('{}1) Start Game.\n\n\n{}'.format(' ' * 35, '{}2) Quit Game.'.format(' '*35)), 'red', attrs=['dark', 'bold'])
+    for c in choices:
+        sys.stdout.write(c)
+        sys.stdout.flush()
+        if c == ' ':
+            time.sleep(0.01)
+        else:
+            time.sleep(0.1)
     time.sleep(1)
+    while True:
+        choice = input(colored('\n\n{}Start Game ? '.format(35*' '), 'green', attrs=['dark']))
+        if choice == '1':
+            break
+        elif choice == '2':
+            sys.exit(0)
+        else:
+            clear()
+            cprint('='*terminal_width, 'magenta')
+            cprint('{:^{terminal_width}}'.format('Equipe HAYAS: Hangman Game!', terminal_width=terminal_width), 'magenta', attrs=['blink', 'bold'])
+            cprint('='*terminal_width, 'magenta')
+            print(welcome_message)
+            print(choices)
 # ************************************************************************************************************
 
 # ******************************** Initialisation de nos variables globales **********************************
@@ -173,7 +203,7 @@ level = 1
 # ************************************** Programme Principale ***************************************************
 
 while True:
-   typewriter()
+   main_menu()
    already_chosen_characters = {}
    clear()
    # choisir une mot aléatoire de la liste et guarantir que le mot a deviner va etre choisit une seule fois.
