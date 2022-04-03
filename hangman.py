@@ -115,7 +115,7 @@ def clear():
    else:
       subprocess.run(["clear"])
 
-def main_menu(): # Pour afficher un message introductive animée du jeu.
+def main_menu(): # Pour afficher un message de bienvenue animé et inviter l'utilisateur à démarrer le jeu ou à le quitter.
     clear()
     terminal_width = os.get_terminal_size().columns
     cprint('='*terminal_width, 'magenta')
@@ -201,9 +201,8 @@ level = 1
 
 
 # ************************************** Programme Principale ***************************************************
-
+main_menu()
 while True:
-   main_menu()
    already_chosen_characters = {}
    clear()
    # choisir une mot aléatoire de la liste et guarantir que le mot a deviner va etre choisit une seule fois.
