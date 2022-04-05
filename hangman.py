@@ -30,7 +30,7 @@ def show_alphabet(alphabet_matrix, character_to_remove = None, character_is_corr
 # l'algorithme principale de jeu:
 def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
    global level
-   level = Fore.BLUE + "Level: " + str(level) + "/" + str(len(possible_words_list))
+   level = Fore.BLUE + "Word: " + str(level) + "/" + str(len(possible_words_list))
    chosen_word_copy = "_".join(chosen_word) # le mot a diviner sous forme de la masque
    lives_available = Fore.RED + "❤️ "*number_of_tries # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
@@ -81,17 +81,21 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
 
    if number_of_tries == 0: # si le joueur est mort (0 vies).
       clear()
-      print(Fore.RED+"="*40)
-      print(Fore.RED+"||{:^35}||".format("Wrong Guess 🙄")) # affichage le message de la perte.
-      print(Fore.RED+"="*40)
+      cprint("="*45, 'red')
+      cprint("||", 'red', end=" ")
+      cprint("{:^38}".format("Wrong Guess! 🙄"), 'red', attrs=['blink'], end=" ") # affichage le message de victoire.
+      cprint("||",'red')
+      cprint("="*45, 'red')
       wrong_guesses += 1
       won = False
       level = int(level[11:level.index("/")])
    else: # si le joueur a gagné
       clear()
-      print(Fore.GREEN+"="*40)
-      print(Fore.GREEN+"||{:^35}||".format("Congrats! You figured it out! ✅")) # affichage le message de victoire.
-      print(Fore.GREEN+"="*40)
+      cprint("="*45, 'green')
+      cprint("||", 'green', end=" ")
+      cprint("{:^38}".format("Congrats! You figured it out! ✅"), 'green', attrs=['blink'], end=" ") # affichage le message de victoire.
+      cprint("||", 'green')
+      cprint("="*45, 'green')
       won = True
       level = int(level[11:level.index("/")]) + 1
 
@@ -99,13 +103,17 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
 def end_game(won, wrong_guesses):
    clear()
    if won and wrong_guesses == 0: # Controle si l'utilisateur a complete tous les niveaux avec success ou non.
-      print(Fore.CYAN+"="*40)
-      print(Fore.CYAN+"||{:^35}||".format("You won all Levels! You wizard 🧙")) # affichage le message de victoire.
-      print(Fore.CYAN+"="*40)
+      cprint("="*46, 'cyan')
+      cprint("||",'cyan', end=" ")
+      cprint("{:^35}".format("You guessed all the words! You wizard 🧙"), 'cyan', attrs=['blink'], end=" ") # affichage le message de victoire.
+      cprint("||", 'cyan')
+      cprint("="*46, 'cyan')
    else:
-      print(Fore.CYAN+"="*44)
-      print(Fore.CYAN+"||{:^41}||".format(f"Hard Luck! you guessed {len(possible_words_list) - wrong_guesses} words out of {len(possible_words_list)}")) # affichage le message de victoire.
-      print(Fore.CYAN+"="*44)
+      cprint("="*45, 'cyan')
+      cprint("||", 'cyan', end= " ")
+      cprint("{:^39}".format(f"Hard Luck! you guessed {len(possible_words_list) - wrong_guesses} words out of {len(possible_words_list)}"), "cyan", attrs=["blink"], end=" ")
+      cprint("||", 'cyan') # affichage le message de victoire.
+      cprint("="*45, 'cyan')
    sys.exit(0)
 
 # Fonction pour effacer le contenu précédent du console:
@@ -133,7 +141,7 @@ def main_menu(): # Pour afficher un message de bienvenue animé et inviter l'uti
         elif c != '\n':
             time.sleep(0.1)
         else:
-            time.sleep(1)
+            time.sleep(0.8)
     choices = colored('{}1) Start Game.\n\n\n{}'.format(' ' * 35, '{}2) Quit Game.'.format(' '*35)), 'red', attrs=['dark', 'bold'])
     for c in choices:
         sys.stdout.write(c)
@@ -236,9 +244,9 @@ while True:
    if len(already_chosen_words) == len(possible_words_list): # Si l'utilisateur a trouve tout les mots alors on quitte.
       end_game(won, wrong_guesses)
    else:
-      play_again = input(Fore.BLUE+"► Next Level? (Y / N) ◄:\n")      # choix de jouer une autre fois.
+      play_again = input(Fore.BLUE+"► Next Word? (Y / N) ◄:\n")      # choix de jouer une autre fois.
       while play_again.lower() != "y" and play_again.lower() != "n": # control de saisie de play_again
-         play_again = input(Fore.BLUE+"► Next Level? (Y / N) ◄:\n")
+         play_again = input(Fore.BLUE+"► Next Word? (Y / N) ◄:\n")
       if play_again.lower() == "n": # si la reponse est non le program va se fermer sinon il va s'executer à nouveau.
          break
 
