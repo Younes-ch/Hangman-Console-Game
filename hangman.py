@@ -54,7 +54,6 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
         else:
           print("Character already entered and was " + Fore.GREEN + "CORRECT!")
           time.sleep(1.5)
-        display_hangman(number_of_tries)
 
         clear()
         # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
@@ -74,9 +73,10 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
          lives_available = Fore.RED + "❤️ "*number_of_tries
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
          print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number))
-         print(Fore.WHITE + "".join(empty_chosen_word))
+         print(Fore.WHITE + " ".join(empty_chosen_word))
          print()
          display_alphabet(alphabet_matrix, character_to_remove = answer)
+      display_hangman(number_of_tries)
 
    global won # on veut acceder a la variable "won" et "wrong_guesses" pour mise a jour sa valeur.
    global wrong_guesses
@@ -125,14 +125,65 @@ def clear():
       subprocess.run(["clear"])
 
 def display_hangman(number_of_tries_left):
+    print()
     if number_of_tries_left == 6:
-        print("+----+")
-        print("|")
-        print("|")
-        print("|")
-        print("|")
-        print("|")
-        print("====")
+        cprint(" +----+", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint("====", "yellow")
+    elif number_of_tries_left == 5:
+        cprint(" +----+", "yellow")
+        print(colored(" |", 'yellow') + "    o")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint("====", "yellow")
+    elif number_of_tries_left == 4:
+        cprint(" +----+", "yellow")
+        print(colored(" |", 'yellow') + "    o")
+        print(colored(" |", 'yellow') + "    |")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint("====", "yellow")
+    elif number_of_tries_left == 3:
+        cprint(" +----+", "yellow")
+        print(colored(" |", 'yellow') + "    o")
+        print(colored(" |", 'yellow') + "   /|")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint("====", "yellow")
+    elif number_of_tries_left == 2:
+        cprint(" +----+", "yellow")
+        print(colored(" |", 'yellow') + "    o")
+        print(colored(" |", 'yellow') + "   /|\\")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint("====", "yellow")
+    elif number_of_tries_left == 1:
+        cprint(" +----+", "yellow")
+        print(colored(" |", 'yellow') + "    o")
+        print(colored(" |", 'yellow') + "   /|\\")
+        print(colored(" |", 'yellow') + "   /")
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint("====", "yellow")
+    elif number_of_tries_left == 0:
+        cprint(" +----+", "yellow")
+        print(colored(" |", 'yellow') + colored("    o", "red"))
+        print(colored(" |", 'yellow') + colored("   /|\\", "red"))
+        print(colored(" |", 'yellow') + colored("   / \\", "red"))
+        cprint(" |", "yellow")
+        cprint(" |", "yellow")
+        cprint("====", "yellow")
+        time.sleep(1)
+    print()
 
 def main_menu(): # Pour afficher un message de bienvenue animé et inviter l'utilisateur à démarrer le jeu ou à le quitter.
     clear()
@@ -220,7 +271,7 @@ word_number = 1
 
 
 # ************************************** Programme Principale ***************************************************
-# main_menu()
+main_menu()
 while True:
    already_chosen_characters = {}
    clear()
