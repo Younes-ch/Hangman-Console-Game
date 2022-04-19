@@ -12,7 +12,7 @@ import time
 # ******************************** Déclaration de nos fonctions ***************************************
 
 # affichage et mettre à jour la matrice des alphabets:
-def show_alphabet(alphabet_matrix, character_to_remove = None, character_is_correct = None):
+def display_alphabet(alphabet_matrix, character_to_remove = None, character_is_correct = None):
    for i in range(6):
       alphabet_line = [x.upper() for x in alphabet_matrix[i]]
       if character_to_remove is not None:
@@ -29,38 +29,40 @@ def show_alphabet(alphabet_matrix, character_to_remove = None, character_is_corr
 
 # l'algorithme principale de jeu:
 def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
-   global level
-   level = Fore.BLUE + "Word: " + str(level) + "/" + str(len(possible_words_list))
-   chosen_word_copy = "_".join(chosen_word) # le mot a diviner sous forme de la masque
+   global word_number
+   word_number = Fore.BLUE + "Word: " + str(word_number) + "/" + str(len(possible_words_list))
    lives_available = Fore.RED + "❤️ "*number_of_tries # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
-   print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, level))
+   print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number))
    print(Fore.WHITE)
-   print(empty_chosen_word)
+   print(" ".join(empty_chosen_word))
    print()
    # affichage de la matrice avec avoir compte des lettres choisit
-   show_alphabet(alphabet_matrix)
-   while number_of_tries > 0 and chosen_word != "".join("".join(empty_chosen_word).split()):
+   display_alphabet(alphabet_matrix)
+   display_hangman(number_of_tries)
+   while number_of_tries > 0 and chosen_word != "".join(empty_chosen_word):
       answer = input("Enter a character:\n")
       while len(answer) != 1 or not answer.isalpha():
          answer = input("Enter a character:\n") # control de saisie de caractère a choisir.
       if answer.lower() in chosen_word: # si l'utilisateur donne une bonne réponse.
-         if answer.lower() not in already_chosen_characters:
-            already_chosen_characters[answer.lower()] = "✅"
-            empty_chosen_word = list(empty_chosen_word)
-            for i in range(len(chosen_word_copy)):
-               if chosen_word_copy[i] == answer.lower():
-                  empty_chosen_word[i] = chosen_word_copy[i] # permutation de "_" dans le masque avec la lettre correcte.
-         else:
-            print("Character already entered and was " + Fore.GREEN + "CORRECT!")
-            time.sleep(1.5)
-         clear()
-         # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, level))
-         print(Fore.WHITE)
-         print("".join(empty_chosen_word))
-         print()
-         show_alphabet(alphabet_matrix, character_is_correct = answer)
+        for i in range(len(chosen_word)):
+           if chosen_word[i] == answer.lower():
+              empty_chosen_word[i] = chosen_word[i] # permutation de "_" dans le masque avec la lettre correcte.
+
+        if answer.lower() not in already_chosen_characters:
+          already_chosen_characters[answer.lower()] = "✅"
+        else:
+          print("Character already entered and was " + Fore.GREEN + "CORRECT!")
+          time.sleep(1.5)
+        display_hangman(number_of_tries)
+
+        clear()
+        # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
+        print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number))
+        print(Fore.WHITE)
+        print(" ".join(empty_chosen_word))
+        print()
+        display_alphabet(alphabet_matrix, character_is_correct = answer)
       else: # si le joueur donne une mauvaise reponse.
          if answer.lower() not in already_chosen_characters:
             number_of_tries -= 1 # decrementation de nombre de vies de joueur s'il a choisit un caractère faux pour la première fois.
@@ -71,14 +73,14 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
          clear()
          lives_available = Fore.RED + "❤️ "*number_of_tries
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, level))
+         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number))
          print(Fore.WHITE + "".join(empty_chosen_word))
          print()
-         show_alphabet(alphabet_matrix, character_to_remove = answer)
+         display_alphabet(alphabet_matrix, character_to_remove = answer)
 
    global won # on veut acceder a la variable "won" et "wrong_guesses" pour mise a jour sa valeur.
    global wrong_guesses
-
+   word_number = int(word_number[11:word_number.index("/")]) + 1
    if number_of_tries == 0: # si le joueur est mort (0 vies).
       clear()
       cprint("="*45, 'red')
@@ -88,7 +90,6 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
       cprint("="*45, 'red')
       wrong_guesses += 1
       won = False
-      level = int(level[11:level.index("/")])
    else: # si le joueur a gagné
       clear()
       cprint("="*45, 'green')
@@ -97,12 +98,12 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
       cprint("||", 'green')
       cprint("="*45, 'green')
       won = True
-      level = int(level[11:level.index("/")]) + 1
+
 
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
 def end_game(won, wrong_guesses):
    clear()
-   if won and wrong_guesses == 0: # Controle si l'utilisateur a complete tous les niveaux avec success ou non.
+   if won and wrong_guesses == 0: # Controle si l'utilisateur a deviné tous les mots avec success ou non.
       cprint("="*46, 'cyan')
       cprint("||",'cyan', end=" ")
       cprint("{:^35}".format("You guessed all the words! You wizard 🧙"), 'cyan', attrs=['blink'], end=" ") # affichage le message de victoire.
@@ -122,6 +123,16 @@ def clear():
       os.system('cls')# il execute le commande 'cls' au console sinon il execute 'clear' pour linux qui sert de effacer le contenu du console.
    else:
       subprocess.run(["clear"])
+
+def display_hangman(number_of_tries_left):
+    if number_of_tries_left == 6:
+        print("+----+")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("====")
 
 def main_menu(): # Pour afficher un message de bienvenue animé et inviter l'utilisateur à démarrer le jeu ou à le quitter.
     clear()
@@ -203,13 +214,13 @@ possible_words_dict = {
                     }
 already_chosen_words = []
 wrong_guesses = 0
-level = 1
+word_number = 1
 
 # ************************************************************************************************************
 
 
 # ************************************** Programme Principale ***************************************************
-main_menu()
+# main_menu()
 while True:
    already_chosen_characters = {}
    clear()
@@ -233,12 +244,11 @@ while True:
                      ]
 
    # creation de la masque de mot a deviner
-   empty_chosen_word = ""
+   empty_chosen_word = []
    for x in chosen_word:
-      empty_chosen_word += " _"
-   empty_chosen_word = empty_chosen_word.strip() # initialisation de masque.
+      empty_chosen_word.append("_") # initialisation de masque.
 
-   main_game(possible_words_dict, chosen_word, empty_chosen_word, 7, already_chosen_characters)
+   main_game(possible_words_dict, chosen_word, empty_chosen_word, 6, already_chosen_characters)
    time.sleep(2.3) # permet d'attendre 2.3 sec aprés passer a l'instruction suivante.
    clear()
    if len(already_chosen_words) == len(possible_words_list): # Si l'utilisateur a trouve tout les mots alors on quitte.
