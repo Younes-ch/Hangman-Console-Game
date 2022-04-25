@@ -264,7 +264,7 @@ word_number = 1
 
 
 # ************************************** Programme Principale ***************************************************
-# main_menu()
+main_menu()
 while True:
    already_chosen_characters = {}
    clear()
