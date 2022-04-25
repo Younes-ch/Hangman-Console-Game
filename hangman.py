@@ -1,10 +1,8 @@
 #! /usr/bin/env python3
 
 import random
-import subprocess
 import os
 import sys
-from colorama import Fore
 from termcolor import colored, cprint
 import time
 
@@ -28,13 +26,12 @@ def display_alphabet(alphabet_matrix, character_to_remove = None, character_is_c
 
 
 # l'algorithme principale de jeu:
-def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
+def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
    global word_number
-   word_number = Fore.BLUE + "Word: " + str(word_number) + "/" + str(len(possible_words_list))
-   lives_available = Fore.RED + "❤️ "*number_of_tries # nombre des vies
+   word_number = colored("Word: " + str(word_number) + "/" + str(len(possible_words_list)), "blue")
+   lives_available = colored("❤️ "*number_of_tries, "red") # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
-   print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number))
-   print(Fore.WHITE)
+   cprint("► " + hint, "yellow", end=colored("     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number), "yellow"))
    print(" ".join(empty_chosen_word))
    print()
    # affichage de la matrice avec avoir compte des lettres choisit
@@ -52,13 +49,12 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
         if answer.lower() not in already_chosen_characters:
           already_chosen_characters[answer.lower()] = "✅"
         else:
-          print("Character already entered and was " + Fore.GREEN + "CORRECT!")
+          print("Character already entered and was " + colored("CORRECT!", "green"))
           time.sleep(1.5)
 
         clear()
         # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-        print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number))
-        print(Fore.WHITE)
+        cprint("► " + hint, "yellow", end=colored("     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number), "yellow"))
         print(" ".join(empty_chosen_word))
         print()
         display_alphabet(alphabet_matrix, character_is_correct = answer)
@@ -67,19 +63,18 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
             number_of_tries -= 1 # decrementation de nombre de vies de joueur s'il a choisit un caractère faux pour la première fois.
             already_chosen_characters[answer.lower()] = "❌"
          else:
-            print("Character already entered and was " + Fore.RED + "WRONG!")
+            print("Character already entered and was " + colored("WRONG!", "red"))
             time.sleep(1.5)
          clear()
-         lives_available = Fore.RED + "❤️ "*number_of_tries
+         lives_available = colored("❤️ "*number_of_tries, "red")
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
-         print(Fore.YELLOW+"►",possible_words_dict[chosen_word], end="     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number))
-         print(Fore.WHITE + " ".join(empty_chosen_word))
+         cprint("► " + hint, "yellow", end=colored("     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number), "yellow"))
+         print(" ".join(empty_chosen_word))
          print()
          display_alphabet(alphabet_matrix, character_to_remove = answer)
       display_hangman(number_of_tries)
 
-   global won # on veut acceder a la variable "won" et "wrong_guesses" pour mise a jour sa valeur.
-   global wrong_guesses
+   global wrong_guesses  # on veut acceder a la variable "wrong_guesses" pour mise a jour sa valeur.
    word_number = int(word_number[11:word_number.index("/")]) + 1
    if number_of_tries == 0: # si le joueur est mort (0 vies).
       clear()
@@ -89,7 +84,6 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
       cprint("||",'red')
       cprint("="*45, 'red')
       wrong_guesses += 1
-      won = False
    else: # si le joueur a gagné
       clear()
       cprint("="*45, 'green')
@@ -97,13 +91,12 @@ def main_game(possible_words_dict, chosen_word, empty_chosen_word, number_of_tri
       cprint("{:^38}".format("Congrats! You figured it out! ✅"), 'green', attrs=['blink'], end=" ") # affichage le message de victoire.
       cprint("||", 'green')
       cprint("="*45, 'green')
-      won = True
 
 
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
-def end_game(won, wrong_guesses):
+def end_game(wrong_guesses):
    clear()
-   if won and wrong_guesses == 0: # Controle si l'utilisateur a deviné tous les mots avec success ou non.
+   if wrong_guesses == 0: # Controle si l'utilisateur a deviné tous les mots avec success ou non.
       cprint("="*46, 'cyan')
       cprint("||",'cyan', end=" ")
       cprint("{:^35}".format("You guessed all the words! You wizard 🧙"), 'cyan', attrs=['blink'], end=" ") # affichage le message de victoire.
@@ -122,7 +115,7 @@ def clear():
    if os.name == 'nt':# si le systeme d'exploitation est windows.
       os.system('cls')# il execute le commande 'cls' au console sinon il execute 'clear' pour linux qui sert de effacer le contenu du console.
    else:
-      subprocess.run(["clear"])
+      os.system("clear")
 
 def display_hangman(number_of_tries_left):
     print()
@@ -231,20 +224,20 @@ def main_menu(): # Pour afficher un message de bienvenue animé et inviter l'uti
 # ******************************** Initialisation de nos variables globales **********************************
 # liste des mots utilisé dans le jeu
 possible_words_list = [
-                      "abracadabra",
-                      "python",
-                      "tomato",
-                      "issatso",
-                      "ukraine",
-                      "table",
-                      "ramadan",
-                      "heaven",
-                      "spongebob",
-                      "kaiessaied",
-                      "paris",
-                      "everest",
-                      "tokyo",
-                      "asia"
+                        "abracadabra",
+                        "python",
+                        "tomato",
+                        "issatso",
+                        "ukraine",
+                        "table",
+                        "ramadan",
+                        "heaven",
+                        "spongebob",
+                        "kaiessaied",
+                        "paris",
+                        "everest",
+                        "tokyo",
+                        "asia"
                      ]
 # dictionnaire qui contient les mot avec leurs indices
 possible_words_dict = {
@@ -271,7 +264,7 @@ word_number = 1
 
 
 # ************************************** Programme Principale ***************************************************
-main_menu()
+# main_menu()
 while True:
    already_chosen_characters = {}
    clear()
@@ -299,15 +292,15 @@ while True:
    for x in chosen_word:
       empty_chosen_word.append("_") # initialisation de masque.
 
-   main_game(possible_words_dict, chosen_word, empty_chosen_word, 6, already_chosen_characters)
+   main_game(possible_words_dict[chosen_word], chosen_word, empty_chosen_word, 6, already_chosen_characters)
    time.sleep(2.3) # permet d'attendre 2.3 sec aprés passer a l'instruction suivante.
    clear()
    if len(already_chosen_words) == len(possible_words_list): # Si l'utilisateur a trouve tout les mots alors on quitte.
-      end_game(won, wrong_guesses)
+      end_game(wrong_guesses)
    else:
-      play_again = input(Fore.BLUE+"► Next Word? (Y / N) ◄:\n")      # choix de jouer une autre fois.
+      play_again = input(colored("► Next Word? (Y / N) ◄:\n", "blue"))      # choix de jouer une autre fois.
       while play_again.lower() != "y" and play_again.lower() != "n": # control de saisie de play_again
-         play_again = input(Fore.BLUE+"► Next Word? (Y / N) ◄:\n")
+         play_again = input(colored("► Next Word? (Y / N) ◄:\n", "blue"))
       if play_again.lower() == "n": # si la reponse est non le program va se fermer sinon il va s'executer à nouveau.
          break
 
