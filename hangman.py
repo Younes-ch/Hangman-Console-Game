@@ -3,8 +3,9 @@
 import random
 import os
 import sys
-from termcolor import colored, cprint
 import time
+from termcolor import colored, cprint
+from playsound import playsound
 
 
 # ******************************** Déclaration de nos fonctions ***************************************
@@ -77,20 +78,22 @@ def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_cho
    global wrong_guesses  # on veut acceder a la variable "wrong_guesses" pour mise a jour sa valeur.
    word_number = int(word_number[11:word_number.index("/")]) + 1
    if number_of_tries == 0: # si le joueur est mort (0 vies).
-      clear()
-      cprint("="*45, 'red')
-      cprint("||", 'red', end=" ")
-      cprint("{:^38}".format("Wrong Guess! 🙄"), 'red', attrs=['blink'], end=" ") # affichage le message de victoire.
-      cprint("||",'red')
-      cprint("="*45, 'red')
-      wrong_guesses += 1
+     playsound("game-over.wav")
+     clear()
+     cprint("="*45, 'red')
+     cprint("||", 'red', end=" ")
+     cprint("{:^38}".format("Wrong Guess! 🙄"), 'red', attrs=['blink'], end=" ") # affichage le message de victoire.
+     cprint("||",'red')
+     cprint("="*45, 'red')
+     wrong_guesses += 1
    else: # si le joueur a gagné
-      clear()
-      cprint("="*45, 'green')
-      cprint("||", 'green', end=" ")
-      cprint("{:^38}".format("Congrats! You figured it out! ✅"), 'green', attrs=['blink'], end=" ") # affichage le message de victoire.
-      cprint("||", 'green')
-      cprint("="*45, 'green')
+     playsound("win.wav")
+     clear()
+     cprint("="*45, 'green')
+     cprint("||", 'green', end=" ")
+     cprint("{:^38}".format("Congrats! You figured it out! ✅"), 'green', attrs=['blink'], end=" ") # affichage le message de victoire.
+     cprint("||", 'green')
+     cprint("="*45, 'green')
 
 # =============================================================================================================
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
