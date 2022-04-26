@@ -28,7 +28,7 @@ def display_alphabet(alphabet_matrix, character_to_remove = None, character_is_c
 # l'algorithme principale de jeu:
 def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
    global word_number
-   word_number = colored("Word: " + str(word_number) + "/" + str(len(possible_words_list)), "blue")
+   word_number = colored("Word: " + str(word_number) + "/" + str(len(possible_words_dict)), "blue")
    lives_available = colored("❤️ "*number_of_tries, "red") # nombre des vies
    # affichage de l'indice et de la masque de mot a diviner
    cprint("► " + hint, "yellow", end=colored("     ({} Tries)  {} {}\n".format(number_of_tries, lives_available, word_number), "yellow"))
@@ -105,7 +105,7 @@ def end_game(wrong_guesses):
    else:
       cprint("="*45, 'cyan')
       cprint("||", 'cyan', end= " ")
-      cprint("{:^39}".format(f"Hard Luck! you guessed {len(possible_words_list) - wrong_guesses} words out of {len(possible_words_list)}"), "cyan", attrs=["blink"], end=" ")
+      cprint("{:^39}".format(f"Hard Luck! you guessed {len(possible_words_dict) - wrong_guesses} words out of {len(possible_words_dict)}"), "cyan", attrs=["blink"], end=" ")
       cprint("||", 'cyan') # affichage le message de victoire.
       cprint("="*45, 'cyan')
    sys.exit(0)
@@ -222,24 +222,7 @@ def main_menu(): # Pour afficher un message de bienvenue animé et inviter l'uti
 # ************************************************************************************************************
 
 # ******************************** Initialisation de nos variables globales **********************************
-# liste des mots utilisé dans le jeu
-possible_words_list = [
-                        "abracadabra",
-                        "python",
-                        "tomato",
-                        "issatso",
-                        "ukraine",
-                        "table",
-                        "ramadan",
-                        "heaven",
-                        "spongebob",
-                        "kaiessaied",
-                        "paris",
-                        "everest",
-                        "tokyo",
-                        "asia"
-                     ]
-# dictionnaire qui contient les mot avec leurs indices
+# dictionnaire qui contient les mots utilisé dans le jeu avec leurs indices.
 possible_words_dict = {
                        "abracadabra" : "Magic spell.",
                        "python" : "This game is written in ...?",
@@ -270,9 +253,9 @@ while True:
    clear()
    # choisir une mot aléatoire de la liste et guarantir que le mot a deviner va etre choisit une seule fois.
    while True:
-      chosen_word = random.choice(possible_words_list)
+      chosen_word = random.choice(list(possible_words_dict))
       if chosen_word in already_chosen_words:
-         chosen_word = random.choice(possible_words_list)
+         chosen_word = random.choice(list(possible_words_dict))
       else:
          already_chosen_words.append(chosen_word)
          break
@@ -295,7 +278,7 @@ while True:
    main_game(possible_words_dict[chosen_word], chosen_word, empty_chosen_word, 6, already_chosen_characters)
    time.sleep(2.3) # permet d'attendre 2.3 sec aprés passer a l'instruction suivante.
    clear()
-   if len(already_chosen_words) == len(possible_words_list): # Si l'utilisateur a trouve tout les mots alors on quitte.
+   if len(already_chosen_words) == len(possible_words_dict): # Si l'utilisateur a trouve tout les mots alors on quitte.
       end_game(wrong_guesses)
    else:
       play_again = input(colored("► Next Word? (Y / N) ◄:\n", "blue"))      # choix de jouer une autre fois.
