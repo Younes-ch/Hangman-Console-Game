@@ -24,7 +24,7 @@ def display_alphabet(alphabet_matrix, character_to_remove = None, character_is_c
       else:
          print("  ".join(alphabet_line))
 
-
+# =============================================================================================================
 # l'algorithme principale de jeu:
 def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_chosen_characters):
    global word_number
@@ -92,7 +92,7 @@ def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_cho
       cprint("||", 'green')
       cprint("="*45, 'green')
 
-
+# =============================================================================================================
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
 def end_game(wrong_guesses):
    clear()
@@ -110,12 +110,14 @@ def end_game(wrong_guesses):
       cprint("="*45, 'cyan')
    sys.exit(0)
 
+# =============================================================================================================
 # Fonction pour effacer le contenu précédent du console:
 def clear():
    if os.name == 'nt':# si le systeme d'exploitation est windows.
       os.system('cls')# il execute le commande 'cls' au console sinon il execute 'clear' pour linux qui sert de effacer le contenu du console.
    else:
       os.system("clear")
+# =============================================================================================================
 
 def display_hangman(number_of_tries_left):
     print()
@@ -177,6 +179,7 @@ def display_hangman(number_of_tries_left):
         cprint("====", "yellow")
         time.sleep(1)
     print()
+# =============================================================================================================
 
 def main_menu(): # Pour afficher un message de bienvenue animé et inviter l'utilisateur à démarrer le jeu ou à le quitter.
     clear()
