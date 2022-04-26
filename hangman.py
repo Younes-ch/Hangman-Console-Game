@@ -51,7 +51,7 @@ def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_cho
           already_chosen_characters[answer.lower()] = "✅"
         else:
           print("Character already entered and was " + colored("CORRECT!", "green"))
-          time.sleep(1.5)
+          time.sleep(1)
 
         clear()
         # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
@@ -65,7 +65,7 @@ def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_cho
             already_chosen_characters[answer.lower()] = "❌"
          else:
             print("Character already entered and was " + colored("WRONG!", "red"))
-            time.sleep(1.5)
+            time.sleep(1)
          clear()
          lives_available = colored("❤️ "*number_of_tries, "red")
          # nouveau affichage avec le nouveau masque et les changements au niveau de matrice.
@@ -74,26 +74,25 @@ def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_cho
          print()
          display_alphabet(alphabet_matrix, character_to_remove = answer)
       display_hangman(number_of_tries)
-
    global wrong_guesses  # on veut acceder a la variable "wrong_guesses" pour mise a jour sa valeur.
    word_number = int(word_number[11:word_number.index("/")]) + 1
    if number_of_tries == 0: # si le joueur est mort (0 vies).
-     playsound("game-over.wav")
      clear()
      cprint("="*45, 'red')
      cprint("||", 'red', end=" ")
      cprint("{:^38}".format("Wrong Guess! 🙄"), 'red', attrs=['blink'], end=" ") # affichage le message de victoire.
      cprint("||",'red')
      cprint("="*45, 'red')
+     playsound("game-over.wav")
      wrong_guesses += 1
    else: # si le joueur a gagné
-     playsound("win.wav")
      clear()
      cprint("="*45, 'green')
      cprint("||", 'green', end=" ")
      cprint("{:^38}".format("Congrats! You figured it out! ✅"), 'green', attrs=['blink'], end=" ") # affichage le message de victoire.
      cprint("||", 'green')
      cprint("="*45, 'green')
+     playsound("win.wav")
 
 # =============================================================================================================
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
@@ -174,9 +173,9 @@ def display_hangman(number_of_tries_left):
         cprint("====", "yellow")
     elif number_of_tries_left == 0:
         cprint(" +----+", "yellow")
-        print(colored(" |", 'yellow') + colored("    o", "red"))
-        print(colored(" |", 'yellow') + colored("   /|\\", "red"))
-        print(colored(" |", 'yellow') + colored("   / \\", "red"))
+        print(colored(" |", 'yellow') + colored("    o", "red", attrs=["bold"]))
+        print(colored(" |", 'yellow') + colored("   /|\\", "red", attrs=["bold"]))
+        print(colored(" |", 'yellow') + colored("   / \\", "red", attrs=["bold"]))
         cprint(" |", "yellow")
         cprint(" |", "yellow")
         cprint("====", "yellow")
@@ -253,7 +252,7 @@ word_number = 1
 
 
 # ************************************** Programme Principale ***************************************************
-main_menu()
+# main_menu()
 while True:
    already_chosen_characters = {}
    clear()
@@ -282,7 +281,7 @@ while True:
       empty_chosen_word.append("_") # initialisation de masque.
 
    main_game(possible_words_dict[chosen_word], chosen_word, empty_chosen_word, 6, already_chosen_characters)
-   time.sleep(2.3) # permet d'attendre 2.3 sec aprés passer a l'instruction suivante.
+   time.sleep(.5) # permet d'attendre 2.3 sec aprés passer a l'instruction suivante.
    clear()
    if len(already_chosen_words) == len(possible_words_dict): # Si l'utilisateur a trouve tout les mots alors on quitte.
       end_game(wrong_guesses)
