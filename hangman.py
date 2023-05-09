@@ -5,7 +5,7 @@ import os
 import sys
 import time
 from termcolor import colored, cprint
-from playsound import playsound
+import pygame
 
 
 # ******************************** Déclaration de nos fonctions ***************************************
@@ -83,7 +83,8 @@ def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_cho
      cprint("{:^38}".format("Wrong Guess! 🙄"), 'red', attrs=['blink'], end=" ") # affichage le message de victoire.
      cprint("||",'red')
      cprint("="*45, 'red')
-     playsound("game-over.wav")
+     pygame.mixer.music.load("game-over.wav")
+     pygame.mixer.music.play()
      wrong_guesses += 1
    else: # si le joueur a gagné
      clear()
@@ -92,7 +93,8 @@ def main_game(hint, chosen_word, empty_chosen_word, number_of_tries, already_cho
      cprint("{:^38}".format("Congrats! You figured it out! ✅"), 'green', attrs=['blink'], end=" ") # affichage le message de victoire.
      cprint("||", 'green')
      cprint("="*45, 'green')
-     playsound("win.wav")
+     pygame.mixer.music.load("win.wav")
+     pygame.mixer.music.play()
 
 # =============================================================================================================
 # Fonction pour sortir du programme en cas ou l'utilisateur a complete tous les niveaux.
@@ -252,6 +254,10 @@ word_number = 1
 
 
 # ************************************** Programme Principale ***************************************************
+
+# Initialisation de pygame mixer
+pygame.mixer.init()
+
 # main_menu()
 while True:
    already_chosen_characters = {}

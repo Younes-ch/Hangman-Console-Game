@@ -1,1 +1,2 @@
-playsound
+pygame==2.4.0
+termcolor==2.3.0
